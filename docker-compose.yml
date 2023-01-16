@@ -1,0 +1,42 @@
+version: "3.8"
+services:
+  springboot-app:
+    image: authentication-using-jwt-spring-boot:1.0.0
+    build: .
+    restart: always
+    networks:
+      - my-network
+    ports:
+#      - 8000-8999:8080
+      - 8180:8080
+    environment:
+      MYSQL_HOST: mysqldb
+      MYSQL_USER: mutaheraffan
+      MYSQL_PASSWORD: mutaheraffan
+      MYSQL_PORT: 3306
+      APPLICATION_PORT: 8080
+      JWT_EXP_IN_SECOND: 30000
+      REFRESH_JWT_EXP_IN_SECOND: 18000
+    depends_on:
+      - mysqldb
+  mysqldb:
+    container_name: mysqldb
+    image: "mysql:5.7"
+    restart: always
+    networks:
+      - my-network
+    ports:
+      - 3307:3306
+    environment:
+      MYSQL_DATABASE: book-store
+      MYSQL_USER: mutaheraffan
+      MYSQL_PASSWORD: mutaheraffan
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - dbvol:/var/lib/mysql
+networks:
+  my-network:
+    name: my-network
+
+volumes:
+  dbvol:
